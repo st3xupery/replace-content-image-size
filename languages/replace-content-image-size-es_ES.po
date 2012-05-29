@@ -1,0 +1,125 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Replace Content Image Size\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-28 20:30+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pau Iglesias <pauiglesias@blogestudio.com>\n"
+"Language-Team: Pau Iglesias, Blogestudio <pauiglesias@blogestudio.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: s\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: Spain\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../replace-content-image-size.php:153
+msgid "Incorrect Width format"
+msgstr "Formato de ancho incorrecto"
+
+#: ../replace-content-image-size.php:163
+msgid "Incorrect Width value"
+msgstr "Valor de ancho incorrecto"
+
+#: ../replace-content-image-size.php:172
+msgid "Incorrect second Width value"
+msgstr "El segundo valor del ancho es incorrecto"
+
+#: ../replace-content-image-size.php:184
+msgid "Please, enter a format size"
+msgstr "Por favor, introduce un formato de tamaño"
+
+#: ../replace-content-image-size.php:205
+msgid "Step 1/3"
+msgstr "Paso 1/3"
+
+#: ../replace-content-image-size.php:207
+msgid "Input data"
+msgstr "Introducción de datos"
+
+#: ../replace-content-image-size.php:211
+msgid "Width: exact or period with \"-\" and max 100 units"
+msgstr "Ancho: valor exacto o intervalo separado por guión \"-\" con un máximo de 100 unidades"
+
+#: ../replace-content-image-size.php:216
+msgid "New size: thumbnail, medium, large, full or custom"
+msgstr "Nuevo tamaño: thumbnail, medium, large, full o personalizado"
+
+#: ../replace-content-image-size.php:221
+msgid "Post type: optional, empty for <i>post</i>"
+msgstr "Post type: opcional, dejar vacío para el tipo <i>post</i>"
+
+#: ../replace-content-image-size.php:224
+msgid "Next step: check and confirm"
+msgstr "Próximo paso: comprobar y confirmar"
+
+#: ../replace-content-image-size.php:228
+msgid "Step 2/3"
+msgstr "Paso 2/3"
+
+#: ../replace-content-image-size.php:230
+msgid "Confirm replacements"
+msgstr "Confirmar substituciones"
+
+#: ../replace-content-image-size.php:236
+msgid "Old width"
+msgstr "Anterior ancho"
+
+#: ../replace-content-image-size.php:238
+msgid "New size"
+msgstr "Nuevo tamaño"
+
+#: ../replace-content-image-size.php:240
+msgid "Post type"
+msgstr "Post type"
+
+#: ../replace-content-image-size.php:244
+msgid "Step 3/3"
+msgstr "Paso 3/3"
+
+#: ../replace-content-image-size.php:336
+#, php-format
+msgid "Found guid: <b>%s</b>"
+msgstr "Encontrado guid: <b>%s</b>"
+
+#: ../replace-content-image-size.php:342
+#, php-format
+msgid "No guid found: %s"
+msgstr "No se ha encontrado el guid: %s"
+
+#: ../replace-content-image-size.php:372
+#: ../replace-content-image-size.php:411
+#, php-format
+msgid "Found slug: <b>%s</b>"
+msgstr "Encontrado por slug: <b>%s</b>"
+
+#: ../replace-content-image-size.php:415
+#, php-format
+msgid "No slug found: %s"
+msgstr "No se ha encontrado por slug: %s"
+
+#: ../replace-content-image-size.php:495
+msgid "Nothing to do"
+msgstr "Ninguna acción"
+
+#: ../replace-content-image-size.php:499
+#, php-format
+msgid "Please, before next step, <b>BACKUP TABLE %s</b>"
+msgstr "Por favor, antes del último paso, es recomendable realizar una <b>COPIA DE SEGURIDAD DE LA TABLA %s</b>"
+
+#: ../replace-content-image-size.php:500
+msgid "Next step: UPDATE !"
+msgstr "Próximo paso: ACTUALIZAR!"
+
+#: ../replace-content-image-size.php:506
+msgid "Data updated"
+msgstr "Datos actualizados"
+
+#: ../replace-content-image-size.php:522
+msgid "Edit entry"
+msgstr "Editar entrada"
+
