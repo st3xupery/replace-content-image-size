@@ -3,13 +3,10 @@
 Plugin Name: Replace Content Image Size
 Plugin URI: http://blogestudio.com
 Description: Find images displayed in posts content and change the format size, very useful when you change the blog theme.
+Version: 1.1
 Author: Pau Iglesias, Blogestudio
-Author URI: http://blogestudio.com/taller/plugins/
-Version: 1.0
 License: GPLv2 or later
 */
-
-
 
 // Avoid direct script calls via plugin URL
 if (!function_exists('add_action'))
@@ -18,11 +15,6 @@ if (!function_exists('add_action'))
 // Check admin area
 if (!is_admin())
 	return;
-
-// Create object plugin
-add_action('init', array('BE_Replace_Content_Image_Size', 'create'));
-
-
 
 /**
  * Replace Content Image Size plugin class
@@ -34,9 +26,11 @@ add_action('init', array('BE_Replace_Content_Image_Size', 'create'));
 // Avoid declaration plugin class conflicts
 if (!class_exists('BE_Replace_Content_Image_Size')) {
 
+	// Create object plugin
+	add_action('init', array('BE_Replace_Content_Image_Size', 'instance'));
+
 	// Main class
-	class BE_Replace_Content_Image_Size
-	{
+	class BE_Replace_Content_Image_Size {
 
 
 	
@@ -46,7 +40,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 
 
 		// Plugin key
-		var $key = 'replace-content-image-size';
+		private $key = 'replace-content-image-size';
 
 
 
@@ -56,19 +50,10 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 
 
 		/**
-		 * Create global object
+		 * Creates a new object instance
 		 */
-		function create() {
-			return new BE_Replace_Content_Image_Size();
-		}
-
-
-
-		/**
-		 * PHP 4 initialization compatibility
-		 */
-		function BE_Replace_Content_Image_Size() {
-			$this->construct();
+		public static function instance() {
+			return new BE_Replace_Content_Image_Size;
 		}
 
 
@@ -76,10 +61,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/**
 		 * Constructor
 		 */
-		function __construct() {
-			
-			// Load translations
-			$this->load_plugin_textdomain();
+		private function __construct() {
 			
 			// Set Tools submenu
 			add_action('admin_menu', array(&$this, 'admin_menu'));
@@ -90,7 +72,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/**
 		 *  Load translation file
 		 */
-		function load_plugin_textdomain() {
+		private function load_plugin_textdomain() {
 			
 			// Check if this plugin is placed in wp-content/mu-plugins directory
 			if (basename(dirname(dirname(__FILE__))) == 'mu-plugins') {
@@ -114,7 +96,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/**
 		 * Admin menu hook
 		 */
-		function admin_menu() {
+		public function admin_menu() {
 			add_submenu_page('tools.php', 'Replace Content Image Size', 'Replace Content Image Size', 'manage_options', $this->key, array(&$this, 'replace'));
 		}
 
@@ -128,10 +110,13 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/*
 		 * Main method: show the form, list of founded images and confirmation submit button, and update posts table
 		 */
-		function replace() {
+		public function replace() {
+			
+			// Load translations
+			$this->load_plugin_textdomain();
 			
 			// Track errors
-			$form_errors = array();			
+			$form_errors = array();
 			
 			// Check step
 			$step = 0;
@@ -170,8 +155,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 							$width = '';
 							$step = 0;
 							$form_errors['width'] = __('Incorrect second Width value', $this->key);
-						}
-						elseif ($width2 - $width > 100) {
+						} elseif ($width2 - $width > 100) {
 							$width2 = $width + 100;
 						}
 					}
@@ -209,19 +193,19 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 						<input type="hidden" name="hd-submit" value="1" />
 						
 						<label for="tx-width"><?php _e('Width: exact or period with "-" and max 100 units', $this->key); ?></label><br />
-						<input type="text" name="tx-width" id="tx-width" value="<?php echo $width_usr; ?>" class="regular-text" /><br />
+						<input type="text" name="tx-width" id="tx-width" value="<?php echo isset($width_usr)? $width_usr : ''; ?>" class="regular-text" /><br />
 						<?php if (isset($form_errors['width'])) : ?><span style="color: red; ?"><?php echo $form_errors['width']; ?></span><br /><?php endif; ?>
 						<br />
 						
 						<label for="tx-size"><?php _e('New size: thumbnail, medium, large, full or custom', $this->key); ?></label><br />
-						<input type="text" name="tx-size" id="tx-size" value="<?php echo $size; ?>" class="regular-text" /><br />
+						<input type="text" name="tx-size" id="tx-size" value="<?php echo isset($size)? $size : ''; ?>" class="regular-text" /><br />
 						<?php if (isset($form_errors['size'])) : ?><span style="color: red; ?"><?php echo $form_errors['size']; ?></span><br /><?php endif; ?>
 						<br />
 						
 						<label for="tx-post-type"><?php _e('Post type: optional, empty for <i>post</i>', $this->key); ?></label><br />
-						<input type="text" name="tx-post-type" id="tx-post-type" value="<?php echo $post_type; ?>" class="regular-text" /><br /><br />
+						<input type="text" name="tx-post-type" id="tx-post-type" value="<?php echo isset($post_type)? $post_type : ''; ?>" class="regular-text" /><br /><br />
 						
-						<input type="submit" value="<?php _e('Next step: check and confirm', $this->key); ?>" />
+						<input type="submit" value="<?php _e('Next step: check and confirm', $this->key); ?>" class="button-primary" />
 						
 					<?php elseif ($step == 1) : ?>
 
@@ -295,13 +279,13 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 									$i++;
 									
 									// Check image tag and confirm database search
-									if (strpos($chunk, '<img ') !== false) {
+									if (stripos($chunk, '<img ') !== false) {
 									
 										// Enum sizes
 										for ($w = $width; $w <= $width2; $w++) {
 									
 											// Check size in chunk interval
-											if (strpos($chunk, '-'.$w.'x') > 0 || strpos($chunk, 'width="'.$w.'"') > 0) {
+											if (stripos($chunk, '-'.$w.'x') > 0 || stripos($chunk, 'width="'.$w.'"') > 0) {
 										
 												// Chunk attachment
 												$attachment = null;
@@ -310,10 +294,10 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 												/* 1. Find by guid */
 												
 												// Search src code
-												$pos1 = strpos($chunk, 'src="');
+												$pos1 = stripos($chunk, 'src="');
 												if ($pos1 > 0) {
 													$pos1 += 5;
-													$pos2 = strpos($chunk, '"', $pos1 + 1);
+													$pos2 = stripos($chunk, '"', $pos1 + 1);
 													if ($pos2 > 0) {
 														
 														// Show post info
@@ -349,7 +333,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 												
 												// Check previous search
 												if (!isset($attachment)) {
-													$pos1 = strpos($chunk, '-'.$w.'x');
+													$pos1 = stripos($chunk, '-'.$w.'x');
 													if ($pos1 > 0) {
 														
 														// Check for slug delimiter
@@ -385,7 +369,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 												
 												// Check previous search
 												if (!isset($attachment) && !$slug_checked) {
-													$pos1 = strpos($chunk, 'src="');
+													$pos1 = stripos($chunk, 'src="');
 													if ($pos1 > 0) {
 														$pos1 += 5;
 														$pos2 = strpos($chunk, '"', $pos1 + 1);
@@ -438,9 +422,10 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 														$chunk_old = $chunk;
 														
 														// Replace data
-														$chunk = preg_replace('/src=".*"/U', 'src="'.$image[0].'"', $chunk);
-														$chunk = preg_replace('/width=".*"/U', 'width="'.$image[1].'"', $chunk);
-														$chunk = preg_replace('/height=".*"/U', 'height="'.$image[2].'"', $chunk);
+														$chunk = preg_replace('/src=".*"/Ui', 'src="'.$image[0].'"', $chunk);
+														$chunk = preg_replace('/width=".*"/Ui', 'width="'.$image[1].'"', $chunk);
+														$chunk = preg_replace('/height=".*"/Ui', 'height="'.$image[2].'"', $chunk);
+														$chunk = preg_replace('/class=\"(.*)size-[\S]*?([^\"]*)\"/Ui', 'class="'.'$1'.'size-'.$size.'$2'.'"', $chunk);
 														
 														// Set checkbox name
 														$checkbox_name = 'ck-resize-'.$post->ID.'-'.$i;
@@ -485,8 +470,10 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 								}
 								
 								// Check for post updates
-								if ($mod && $step == 2)
+								if ($mod && $step == 2) {
 									$wpdb->query('UPDATE '.$wpdb->posts.' SET post_content = "'.$wpdb->escape($content).'" WHERE ID = '.$post->ID);
+									clean_post_cache($post->ID);
+								}
 							}
 						}
 						
@@ -497,13 +484,14 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 								echo '<hr />';
 								echo '<p>&nbsp;</p>';
 								echo '<p>'.sprintf(__('Please, before next step, <b>BACKUP TABLE %s</b>', $this->key), $wpdb->posts).'</p>';
-								echo '<input type="submit" value="'.__('Next step: UPDATE !', $this->key).'" />';
+								echo '<input type="submit" value="'.__('Next step: UPDATE !', $this->key).' "class="button-primary" />';
 								echo '<p>&nbsp;</p>';
 							}
-						}
 						
-						elseif ($step == 2)
+						
+						} elseif ($step == 2) {
 							echo '<p><i>&rarr; '.__('Data updated', $this->key).'</i></p>';
+						}
 					
 					endif;
 				
@@ -517,7 +505,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/*
 		 * Show posts info: Id and links to single post and edit form
 		 */
-		function display_post_info($post, $step, &$id_displayed) {
+		private function display_post_info($post, $step, &$id_displayed) {
 			if ($step == 1 && !$id_displayed) {
 				echo '<hr /><p style="line-height: 20px;">Post <b>'.$post->ID.'</b><br /><a href="'.get_permalink($post->ID).'" target="post_display">'.$post->post_title.'</a> &nbsp; [<a href="'.get_edit_post_link($post->ID).'" target="post_edit">'.__('Edit entry', $this->key).'</a>]</p>';
 				$id_displayed = true;
@@ -529,7 +517,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/*
 		 * Helper function for slug composition
 		 */
-		function remove_accents($value)	{
+		private function remove_accents($value)	{
 			return(utf8_encode(strtr(utf8_decode($value), utf8_decode("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÒÓÔÕÖØÙÚÛÜÝßÑàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿñ"),
 														  utf8_decode("SOZsozYYuAAAAAAACEEEEIIIIDOOOOOOUUUUYsNaaaaaaaceeeeiiiiooooooouuuuyyn"))));
 		}
@@ -538,5 +526,3 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 
 	}
 }
-
-?>

@@ -1,9 +1,9 @@
 === Replace Content Image Size ===
 Contributors: blogestudio, pauiglesias
-Tags: image, resize, content, size
-Requires at least: 2.0.2
-Tested up to: 3.3.2
-Stable tag: 1.0
+Tags: image, resize, content, size, sizes, media, image width, image sizes
+Requires at least: 3.3.2
+Tested up to: 4.1.1
+Stable tag: 1.1
 License: GPLv2 or later
 
 Find images displayed in posts content and change the format size, very useful when you change the blog theme.
@@ -50,7 +50,33 @@ Each post that needs to be altered goes through a process of reconstruction that
 to join the fragments and update the posts table. It is possible that an strange error may occur, and for this reasons
 we recommend to backup your posts table before launch de last step of the replacement process.
 
+== Screenshots ==
+
+1. The 2/3 step where you can confirm the changes to make in the posts content.
+
 == Changelog ==
 
+= 1.1 =
+Release Date: March 28th, 2015
+
+* Tested code for WordPress 4.1.1 version.
+* Some warnings on undefined variables fixed.
+* Defered load plugin textdomain to plugin admin section (improve performance).
+* Added style to submit buttons.
+* Fix PHP strict warnings and set properly scope of class methods.
+* Fix class size-[alias] of html img code.
+* Added clean_post_cache when update post.
+* Change strpos by stripos when needed.
+
 = 1.0 =
-* First and tested released
+Release Date: May 29th, 2012
+
+* First and tested released for WordPress 3.3.2
+
+== Upgrade Notice ==
+
+= 1.1 =
+A maintenance release fixing bugs and updating the code to the latest WordPress version.
+
+= 1.0 =
+Initial Release.
