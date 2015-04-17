@@ -3,7 +3,7 @@
 Plugin Name: Replace Content Image Size
 Plugin URI: http://blogestudio.com
 Description: Find images displayed in posts content and change the format size, very useful when you change the blog theme.
-Version: 1.1
+Version: 1.2
 Author: Pau Iglesias, Blogestudio
 License: GPLv2 or later
 */
@@ -72,18 +72,22 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 		/**
 		 *  Load translation file
 		 */
-		private function load_plugin_textdomain() {
+		private function load_plugin_textdomain($lang_dir = 'languages') {
 			
-			// Check if this plugin is placed in wp-content/mu-plugins directory
-			if (basename(dirname(dirname(__FILE__))) == 'mu-plugins') {
-				
-				// Check WP version support
-				if (function_exists('load_muplugin_textdomain'))
-					load_muplugin_textdomain($this->key, basename(dirname(__FILE__)).'/languages');
-			}
+			// Check load
+			static $loaded;
+			if (isset($loaded))
+				return;
+			$loaded = true;
+			
+			// Check if this plugin is placed in wp-content/mu-plugins directory or subdirectory
+			if (('mu-plugins' == basename(dirname(__FILE__)) || 'mu-plugins' == basename(dirname(dirname(__FILE__)))) && function_exists('load_muplugin_textdomain')) {
+				load_muplugin_textdomain($this->key, ('mu-plugins' == basename(dirname(__FILE__))? '' : basename(dirname(__FILE__)).'/').$lang_dir);
 			
 			// Usual wp-content/plugins directory location
-			else load_plugin_textdomain($this->key, false, basename(dirname(__FILE__)) . '/languages');
+			} else {
+				load_plugin_textdomain($this->key, false, basename(dirname(__FILE__)).'/'.$lang_dir);
+			}
 		}
 
 
@@ -193,17 +197,17 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 						<input type="hidden" name="hd-submit" value="1" />
 						
 						<label for="tx-width"><?php _e('Width: exact or period with "-" and max 100 units', $this->key); ?></label><br />
-						<input type="text" name="tx-width" id="tx-width" value="<?php echo isset($width_usr)? $width_usr : ''; ?>" class="regular-text" /><br />
+						<input type="text" name="tx-width" id="tx-width" value="<?php echo isset($width_usr)? esc_attr($width_usr) : ''; ?>" class="regular-text" /><br />
 						<?php if (isset($form_errors['width'])) : ?><span style="color: red; ?"><?php echo $form_errors['width']; ?></span><br /><?php endif; ?>
 						<br />
 						
 						<label for="tx-size"><?php _e('New size: thumbnail, medium, large, full or custom', $this->key); ?></label><br />
-						<input type="text" name="tx-size" id="tx-size" value="<?php echo isset($size)? $size : ''; ?>" class="regular-text" /><br />
+						<input type="text" name="tx-size" id="tx-size" value="<?php echo isset($size)? esc_attr($size) : ''; ?>" class="regular-text" /><br />
 						<?php if (isset($form_errors['size'])) : ?><span style="color: red; ?"><?php echo $form_errors['size']; ?></span><br /><?php endif; ?>
 						<br />
 						
 						<label for="tx-post-type"><?php _e('Post type: optional, empty for <i>post</i>', $this->key); ?></label><br />
-						<input type="text" name="tx-post-type" id="tx-post-type" value="<?php echo isset($post_type)? $post_type : ''; ?>" class="regular-text" /><br /><br />
+						<input type="text" name="tx-post-type" id="tx-post-type" value="<?php echo isset($post_type)? esc_attr($post_type) : ''; ?>" class="regular-text" /><br /><br />
 						
 						<input type="submit" value="<?php _e('Next step: check and confirm', $this->key); ?>" class="button-primary" />
 						
@@ -214,14 +218,15 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 						<p><i>&rarr; <?php _e('Confirm replacements', $this->key); ?></i></p>
 				
 						<input type="hidden" name="hd-submit" value="2" />						
-						<input type="hidden" name="tx-width" value="<?php echo $width_usr; ?>" />
-						<input type="hidden" name="tx-size" value="<?php echo $size; ?>" />
+						<input type="hidden" name="tx-width" value="<?php echo esc_attr($width_usr); ?>" />
+						<input type="hidden" name="tx-size" value="<?php echo esc_attr($size); ?>" />
+						<input type="hidden" name="tx-post-type" value="<?php echo esc_attr($post_type); ?>" />
 						
-						<p><?php _e('Old width', $this->key); ?>: <b><?php echo $width_usr; ?></b></p>
+						<p><?php _e('Old width', $this->key); ?>: <b><?php echo esc_html($width_usr); ?></b></p>
 						
-						<p><?php _e('New size', $this->key); ?>: <b><?php echo $size; ?></b></p>
+						<p><?php _e('New size', $this->key); ?>: <b><?php echo esc_html($size); ?></b></p>
 						
-						<p><?php _e('Post type', $this->key); ?>: <b><?php echo $post_type; ?></b></p>
+						<p><?php _e('Post type', $this->key); ?>: <b><?php echo esc_html($post_type); ?></b></p>
 					
 					<?php elseif ($step == 2) : ?>
 					
@@ -239,6 +244,9 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 
 						// Globals
 						global $wpdb;
+						
+						// Mod flag
+						$mod_sum = false;
 
 						// Exact results						
 						if (!isset($width2))
@@ -248,7 +256,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 						$ids = array();
 						$posts = array();
 						for ($w = $width; $w <= $width2; $w++) {
-							$entries = $wpdb->get_results('SELECT ID, post_title, post_content FROM '.$wpdb->posts.' WHERE post_content LIKE "%<img %" AND (post_content LIKE "%-'.$wpdb->escape($w).'x%" OR post_content LIKE '."'".'%width="'.$w.'"%'."'".') AND post_type = "'.$wpdb->escape($post_type).'" AND post_status IN ("publish", "future")'.((count($ids) > 0)? ' AND ID NOT IN ('.implode(',', $ids).')' : '').' ORDER BY ID DESC');
+							$entries = $wpdb->get_results('SELECT ID, post_title, post_content FROM '.$wpdb->posts.' WHERE post_content LIKE "%<img %" AND (post_content LIKE "%-'.esc_sql($w).'x%" OR post_content LIKE '."'".'%width="'.$w.'"%'."'".') AND post_type = "'.esc_sql($post_type).'" AND post_status IN ("publish", "future")'.((count($ids) > 0)? ' AND ID NOT IN ('.implode(',', $ids).')' : '').' ORDER BY ID DESC');
 							if ($entries && count($entries) > 0) {
 								foreach ($entries as $entry) {
 									$posts[] = $entry;
@@ -259,9 +267,6 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 						
 						// Check results
 						if ($posts && count($posts) > 0) {
-							
-							// Mod global
-							$mod_sum = false;
 							
 							// Enum posts
 							foreach ($posts as $post) {
@@ -309,7 +314,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 															$url = $matches[1].'.'.$matches[2];
 														
 														// Search guid
-														$result = $wpdb->get_results('SELECT ID FROM '.$wpdb->posts.' WHERE guid = "'.$wpdb->escape($url).'" AND post_type = "attachment"');
+														$result = $wpdb->get_results('SELECT ID FROM '.$wpdb->posts.' WHERE guid = "'.esc_sql($url).'" AND post_type = "attachment"');
 														if ($result && is_array($result) && count($result) > 0) {
 															
 															// Search attachments
@@ -471,7 +476,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 								
 								// Check for post updates
 								if ($mod && $step == 2) {
-									$wpdb->query('UPDATE '.$wpdb->posts.' SET post_content = "'.$wpdb->escape($content).'" WHERE ID = '.$post->ID);
+									$wpdb->query('UPDATE '.$wpdb->posts.' SET post_content = "'.esc_sql($content).'" WHERE ID = '.$post->ID);
 									clean_post_cache($post->ID);
 								}
 							}

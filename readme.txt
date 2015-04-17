@@ -2,8 +2,8 @@
 Contributors: blogestudio, pauiglesias
 Tags: image, resize, content, size, sizes, media, image width, image sizes
 Requires at least: 3.3.2
-Tested up to: 4.1.1
-Stable tag: 1.1
+Tested up to: 4.2
+Stable tag: 1.2
 License: GPLv2 or later
 
 Find images displayed in posts content and change the format size, very useful when you change the blog theme.
@@ -56,6 +56,15 @@ we recommend to backup your posts table before launch de last step of the replac
 
 == Changelog ==
 
+= 1.2 =
+Release Date: April 17th, 2015
+
+* Change $wpdb->escape by esc_url function
+* Success test with custom post types
+* Fix bad scope internal function variable mod_sum
+* Fix post_type hidden form var warning and 3th step
+* Tested code for WordPress 4.2 version.
+
 = 1.1 =
 Release Date: March 28th, 2015
 
@@ -74,6 +83,9 @@ Release Date: May 29th, 2012
 * First and tested released for WordPress 3.3.2
 
 == Upgrade Notice ==
+
+= 1.2 =
+Fixed some warnings for Wordpress 4.2 support
 
 = 1.1 =
 A maintenance release fixing bugs and updating the code to the latest WordPress version.
