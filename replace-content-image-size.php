@@ -430,7 +430,7 @@ if (!class_exists('BE_Replace_Content_Image_Size')) {
 														$chunk = preg_replace('/src=".*"/Ui', 'src="'.$image[0].'"', $chunk);
 														$chunk = preg_replace('/width=".*"/Ui', 'width="'.$image[1].'"', $chunk);
 														$chunk = preg_replace('/height=".*"/Ui', 'height="'.$image[2].'"', $chunk);
-														$chunk = preg_replace('/class=\"(.*)size-[\S]*?([^\"]*)\"/Ui', 'class="'.'$1'.'size-'.$size.'$2'.'"', $chunk);
+														$chunk = preg_replace('/class=\"(.*)size-[_a-zA-Z0-9-]*?([^\"]*)\"/Ui', 'class="'.'$1'.'size-'.$size.'$2'.'"', $chunk);
 														
 														// Set checkbox name
 														$checkbox_name = 'ck-resize-'.$post->ID.'-'.$i;

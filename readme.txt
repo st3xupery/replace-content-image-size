@@ -56,6 +56,13 @@ we recommend to backup your posts table before launch de last step of the replac
 
 == Changelog ==
 
+= 1.2.1 =
+Release Date: July 15th, 2015
+
+* Resolving a bug when replacing class attribute value
+* This bug depended on the class attribute relative position
+* The main symptom was lack of closing quotes in class attribute
+
 = 1.2 =
 Release Date: April 17th, 2015
 
@@ -83,6 +90,9 @@ Release Date: May 29th, 2012
 * First and tested released for WordPress 3.3.2
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Fixed bug replacing images class names
 
 = 1.2 =
 Fixed some warnings for Wordpress 4.2 support
