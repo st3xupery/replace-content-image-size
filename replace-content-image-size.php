@@ -3,7 +3,7 @@
 Plugin Name: Replace Content Image Size
 Plugin URI: http://blogestudio.com
 Description: Find images displayed in posts content and change the format size, very useful when you change the blog theme.
-Version: 1.2
+Version: 1.2.1
 Author: Pau Iglesias, Blogestudio
 License: GPLv2 or later
 */
