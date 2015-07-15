@@ -3,7 +3,7 @@ Contributors: blogestudio, pauiglesias
 Tags: image, resize, content, size, sizes, media, image width, image sizes
 Requires at least: 3.3.2
 Tested up to: 4.2
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 
 Find images displayed in posts content and change the format size, very useful when you change the blog theme.
