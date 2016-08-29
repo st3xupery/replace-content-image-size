@@ -56,6 +56,12 @@ we recommend to backup your posts table before launch de last step of the replac
 
 == Changelog ==
 
+= 1.2.2 =
+Release Date: July 15th, 2015
+
+* Improved the method in which script parses HTML in posts for image tags.
+* Resolves a bug that replaced a group of image tags without a new line delineation with just the first image of the group.
+
 = 1.2.1 =
 Release Date: July 15th, 2015
 
